@@ -57,7 +57,23 @@
 
 (function () {
   var tabs = document.getElementById('mortgage-tabs');
+  var calcFields = document.getElementById('mortgage-calc-fields');
+  var info = document.getElementById('mortgage-info');
   if (!tabs) return;
+
+  var TAB_INFO = {
+    military:
+      '<p class="gv-body-l">Военная ипотека — особая льготная программа кредитования для военных.</p>' +
+      '<ol class="gv-mortgage-info-list">' +
+      '<li>Состоять на контрактной службе в армии России или подразделениях Минобороны</li>' +
+      '<li>Быть участником накопительной ипотечной системы (НИС), не менее 36 месяцев</li>' +
+      '</ol>',
+    matcap:
+      '<p class="gv-body-l">Материнский капитал представляет собой уникальную возможность для семей с детьми улучшить свои жилищные условия. Его можно использовать для частичной оплаты квартиры после бронирования, внести как первоначальный взнос при оформлении ипотечного кредита или направить на досрочное погашение существующей ипотеки.</p>',
+    cash:
+      '<p class="gv-body-l">Оплата наличными — это простой и быстрый способ приобретения недвижимости. Компания ССК предлагает получить скидку за наличный расчёт. От 5 до 10 тыс. ₽ для клиентов, приобретающих квартиры за наличный расчёт при единовременной оплате.</p>'
+  };
+
   tabs.addEventListener('click', function (e) {
     var btn = e.target.closest('.gv-chip');
     if (!btn) return;
@@ -65,5 +81,14 @@
       c.classList.remove('is-active', 'gv-chip--dark');
     });
     btn.classList.add('is-active', 'gv-chip--dark');
+
+    var tab = btn.dataset.tab;
+    if (tab === 'default' || !TAB_INFO[tab]) {
+      if (calcFields) calcFields.hidden = false;
+      if (info) { info.hidden = true; info.innerHTML = ''; }
+    } else {
+      if (calcFields) calcFields.hidden = true;
+      if (info) { info.hidden = false; info.innerHTML = TAB_INFO[tab]; }
+    }
   });
 })();
