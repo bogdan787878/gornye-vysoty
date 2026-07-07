@@ -126,6 +126,7 @@
   .gv-hero-content { padding-top: var(--gv-sp-56); padding-left: var(--gv-side); padding-right: var(--gv-side); }
   .gv-hero-title { width: auto; margin-left: 0; margin-right: 0; }
   .gv-hero-title-break { display: none; }
+  .gv-hero-price { font-size: 18px; }
 }
 
 /* ── АКЦИИ И СКИДКИ ── */

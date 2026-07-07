@@ -105,8 +105,13 @@ img, video { display: block; max-width: 100%; }
 .gv-body-l { font-family: var(--gv-font); font-weight: 400; font-size: 16px; line-height: 20px; color: var(--gv-ink); }
 
 @media (max-width: 860px) {
-  .gv-h1 { font-size: 40px; line-height: 46px; }
-  .gv-h2 { font-size: 32px; line-height: 38px; }
+  .gv-h1 { font-size: 38px; line-height: 44px; }
+  .gv-h2 { font-size: 30px; line-height: 36px; }
+  .gv-title { font-size: 22px; line-height: 30px; }
+  .gv-body-s { font-size: 14px; line-height: 16px; }
+  .gv-body-l { font-size: 14px; line-height: 18px; }
+  .gv-btn--m { font-size: 16px; line-height: 18px; padding: 14px 20px; }
+  .gv-btn--s { font-size: 13px; line-height: 15px; padding: 12px 18px; }
 }
 
 /* ── Кнопки ───────────────────────────────────────────────── */
