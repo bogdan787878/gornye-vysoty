@@ -159,6 +159,8 @@
 
 @media (max-width: 860px) {
   .gv-perk-card { width: 260px; min-height: 180px; }
+  .gv-perk-card-title { font-size: 17px; }
+  .gv-perk-card-value { font-size: 22px; }
 }
 
 /* ── СЕКЦИЯ (обычный контентный блок, внешний отступ между секциями) ── */
@@ -247,6 +249,9 @@
 @media (max-width: 860px) {
   .gv-mortgage { grid-template-columns: 1fr; }
   .gv-mortgage-avatars span:nth-child(n+7) { display: none; }
+  .gv-mortgage-value { font-size: 15px; }
+  .gv-mortgage-input { font-size: 15px; }
+  .gv-mortgage-info-list li { font-size: 14px; }
 }
 
 /* ── ПОДБОРЩИК ПЛАНИРОВОК ── */
@@ -286,6 +291,10 @@
 
 @media (max-width: 1080px) { .gv-plans-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 760px)  { .gv-plans-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 760px) {
+  .gv-plan-card-title { font-size: 16px; }
+  .gv-plan-card-price { font-size: 16px; }
+}
 @media (max-width: 480px)  { .gv-plans-grid { grid-template-columns: 1fr; } }
 
 /* ── КАТАЛОГ КВАРТИР ── */
@@ -361,6 +370,7 @@
   .gv-catalog-footer { flex-direction: column; align-items: flex-start; }
   .gv-catalog-actions { flex-direction: column; width: 100%; }
   .gv-catalog-actions .gv-btn { width: 100%; }
+  .gv-catalog-price-main { font-size: 20px; line-height: 26px; }
 }
 
 /* ── РАЙОН ДЛЯ КОМФОРТНОЙ ЖИЗНИ ── */
@@ -371,9 +381,7 @@
 
 @media (max-width: 860px) {
   .gv-lifestyle-grid { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 560px) {
-  .gv-lifestyle-grid { grid-template-columns: 1fr; }
+  .gv-lifestyle-caption { font-size: 16px; line-height: 20px; }
 }
 
 /* ── ПРЕИМУЩЕСТВА И НОВЫЕ МАРШРУТЫ ── */
@@ -413,9 +421,10 @@
 .gv-route-img { height: 100%; }
 
 @media (max-width: 860px) {
-  .gv-route-card { grid-template-columns: 1fr; min-height: unset; width: 88vw; }
+  .gv-route-card { grid-template-columns: 1fr; min-height: unset; width: 78vw; border-radius: 18px; }
   .gv-route-img { aspect-ratio: 4 / 3; }
-  .gv-routes-head { margin-bottom: var(--gv-sp-16); }
+  .gv-route-body { padding: var(--gv-sp-24); gap: var(--gv-sp-8); }
+  .gv-routes-head { margin-bottom: var(--gv-sp-56); }
   .gv-routes-nav { display: none; }
 }
 
@@ -449,6 +458,8 @@
 @media (max-width: 860px) {
   .gv-contacts-map { height: 460px; }
   .gv-contacts-card { left: var(--gv-side); right: var(--gv-side); max-width: none; }
+  .gv-contacts-list li { font-size: 15px; }
+  .gv-contacts-cta { font-size: 15px; }
 }
 
 /* ── О ЗАСТРОЙЩИКЕ ── */
@@ -480,9 +491,7 @@
 @media (max-width: 860px) {
   .gv-about-stats { position: static; inset: auto; grid-template-columns: 1fr 1fr; margin-top: var(--gv-sp-16); }
   .gv-stat-card { min-height: 120px; }
-}
-@media (max-width: 560px) {
-  .gv-about-stats { grid-template-columns: 1fr; }
+  .gv-stat-text strong { font-size: 18px; }
 }
 
 /* ── ЛЕГАЛ ── */
