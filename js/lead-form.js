@@ -1,7 +1,5 @@
 (function () {
-  // TODO: подставить публичный URL функции после деплоя в Yandex Cloud
-  // (Yandex Cloud Console → Serverless Functions → ваша функция → «HTTP-адрес»)
-  var FUNCTION_URL = 'https://functions.yandexcloud.net/ВАШ_ID_ФУНКЦИИ';
+  var FUNCTION_URL = 'https://functions.yandexcloud.net/d4eepo0vtao39g02lvlg';
 
   var submitBtn = document.querySelector('.gv-mortgage-submit');
   if (!submitBtn) return;

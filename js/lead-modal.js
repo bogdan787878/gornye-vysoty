@@ -1,6 +1,5 @@
 (function () {
-  // TODO: тот же адрес функции, что и в lead-form.js — подставить после деплоя в Yandex Cloud
-  var FUNCTION_URL = 'https://functions.yandexcloud.net/ВАШ_ID_ФУНКЦИИ';
+  var FUNCTION_URL = 'https://functions.yandexcloud.net/d4eepo0vtao39g02lvlg';
 
   var modal = document.getElementById('leadModal');
   var closeBtn = document.getElementById('leadModalClose');

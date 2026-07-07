@@ -1,24 +1,27 @@
 /**
- * Yandex Cloud Function — принимает заявку с формы ипотеки на gornye-vysoty.ru
- * и создаёт лид в Bitrix24 через входящий вебхук.
+ * Yandex Cloud Function — принимает заявку с сайта gornye-vysoty.ru
+ * и передаёт её в CRM клиента (СК Кубань) через их приёмный хук sinobi/hook.php.
  *
  * Деплой (Yandex Cloud CLI):
- *   yc serverless function create --name gv-lead-to-bitrix
+ *   yc serverless function create --name gv-lead-to-crm
  *   yc serverless function version create \
- *     --function-name gv-lead-to-bitrix \
+ *     --function-name gv-lead-to-crm \
  *     --runtime nodejs18 \
  *     --entrypoint index.handler \
  *     --memory 128m \
  *     --execution-timeout 5s \
  *     --source-path . \
- *     --environment BITRIX_WEBHOOK_URL=https://ВАШПОРТАЛ.bitrix24.ru/rest/1/ВАШТОКЕН/ \
+ *     --environment CRM_HOOK_URL=https://bx.sskuban.ru/appssk/sinobi/hook.php \
+ *     --environment CRM_AUTH_TOKEN=ТОКЕН_ОТ_КЛИЕНТА \
+ *     --environment CRM_HOUSING_ID=11926 \
+ *     --environment CRM_SOURCE_ID=35 \
  *     --environment ALLOWED_ORIGIN=https://gornye-vysoty.ru
  *
  * После создания версии Yandex Cloud даёт публичный HTTP-эндпоинт вида:
  *   https://functions.yandexcloud.net/<function-id>
- * Этот URL нужно подставить в js/lead-form.js на сайте (FUNCTION_URL).
+ * Этот URL нужно подставить в js/lead-form.js и js/lead-modal.js на сайте (FUNCTION_URL).
  *
- * ВАЖНО: BITRIX_WEBHOOK_URL хранится только в переменной окружения функции —
+ * ВАЖНО: CRM_AUTH_TOKEN хранится только в переменной окружения функции —
  * никогда не должен попадать в код фронтенда.
  */
 
@@ -45,49 +48,55 @@ exports.handler = async function (event) {
     return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ ok: false, error: 'bad json' }) };
   }
 
-  const phone = (data.phone || '').trim();
-  if (!phone || phone.length < 5) {
+  const phone = (data.phone || '').replace(/\D/g, '');
+  if (!phone || phone.length < 10) {
     return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ ok: false, error: 'phone required' }) };
   }
 
-  const webhookUrl = process.env.BITRIX_WEBHOOK_URL;
-  if (!webhookUrl) {
-    return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ ok: false, error: 'webhook not configured' }) };
+  const hookUrl = process.env.CRM_HOOK_URL;
+  const authToken = process.env.CRM_AUTH_TOKEN;
+  const housingId = process.env.CRM_HOUSING_ID;
+  const sourceId = process.env.CRM_SOURCE_ID;
+  if (!hookUrl || !authToken) {
+    return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ ok: false, error: 'crm hook not configured' }) };
   }
 
   const comments = [
-    'Заявка с сайта gornye-vysoty.ru',
     data.program ? 'Программа: ' + data.program : '',
     data.price ? 'Стоимость квартиры: ' + data.price + ' ₽' : '',
     data.downPayment ? 'Первый взнос: ' + data.downPayment + ' ₽' : '',
     data.term ? 'Срок кредита: ' + data.term + ' лет' : '',
+    data.source ? 'Источник заявки на странице: ' + data.source : '',
     data.page ? 'Страница: ' + data.page : '',
     data.utm ? 'UTM: ' + data.utm : '',
   ].filter(Boolean).join('\n');
 
-  const leadFields = {
-    TITLE: 'Заявка — Горные высоты (' + (data.program || 'Ипотека') + ')',
-    NAME: data.name || 'Клиент с сайта',
-    PHONE: [{ VALUE: phone, VALUE_TYPE: 'WORK' }],
-    COMMENTS: comments,
-    SOURCE_ID: 'WEB',
-    SOURCE_DESCRIPTION: 'gornye-vysoty.ru',
-  };
+  const params = new URLSearchParams();
+  params.append('fields[TITLE]', 'Заявка с сайта Горные высоты' + (data.program ? ' (' + data.program + ')' : ''));
+  params.append('fields[NAME]', data.name || 'Клиент с сайта');
+  params.append('fields[PHONE][0][VALUE]', phone);
+  params.append('fields[PHONE][0][VALUE_TYPE]', 'WORK');
+  params.append('fields[COMMENTS]', comments);
+  if (housingId) params.append('housing_id', housingId);
+  if (sourceId) params.append('source_id', sourceId);
 
   try {
-    const res = await fetch(webhookUrl.replace(/\/$/, '') + '/crm.lead.add.json', {
+    const res = await fetch(hookUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fields: leadFields }),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-Auth-Token': authToken,
+      },
+      body: params.toString(),
     });
-    const json = await res.json();
+    const text = await res.text();
 
-    if (json.error) {
-      return { statusCode: 502, headers: corsHeaders, body: JSON.stringify({ ok: false, error: json.error_description || json.error }) };
+    if (!res.ok) {
+      return { statusCode: 502, headers: corsHeaders, body: JSON.stringify({ ok: false, error: text || 'crm request failed' }) };
     }
 
-    return { statusCode: 200, headers: corsHeaders, body: JSON.stringify({ ok: true, leadId: json.result }) };
+    return { statusCode: 200, headers: corsHeaders, body: JSON.stringify({ ok: true }) };
   } catch (e) {
-    return { statusCode: 502, headers: corsHeaders, body: JSON.stringify({ ok: false, error: 'bitrix request failed' }) };
+    return { statusCode: 502, headers: corsHeaders, body: JSON.stringify({ ok: false, error: 'crm request failed' }) };
   }
 };
