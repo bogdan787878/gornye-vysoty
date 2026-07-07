@@ -1,0 +1,10 @@
+[
+  { "id": "pl-001", "image": "images/planirovki/studio-1.webp", "rooms": 0, "area": 22.68, "price": 3700000, "title": "Студия 22,68 м²" },
+  { "id": "pl-002", "image": "", "rooms": 0, "area": 34.2, "price": 3700000, "title": "Студия 34,2 м²" },
+  { "id": "pl-003", "image": "images/planirovki/1k-1.webp", "rooms": 1, "area": 40.66, "price": 5600000, "title": "1-комн. 40,66 м²" },
+  { "id": "pl-004", "image": "", "rooms": 1, "area": 46.8, "price": 5600000, "title": "1-комн. 46,8 м²" },
+  { "id": "pl-005", "image": "images/planirovki/2k-1.webp", "rooms": 2, "area": 63.86, "price": 7700000, "title": "2-комн. 63,86 м²" },
+  { "id": "pl-006", "image": "", "rooms": 2, "area": 58.4, "price": 7700000, "title": "2-комн. 58,4 м²" },
+  { "id": "pl-007", "image": "images/planirovki/3k-1.webp", "rooms": 3, "area": 77.60, "price": 11000000, "title": "3-комн. 77,60 м²" },
+  { "id": "pl-008", "image": "", "rooms": 3, "area": 84.6, "price": 11000000, "title": "3-комн. 84,6 м²" }
+]

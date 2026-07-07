@@ -1,0 +1,470 @@
+/* ============================================================
+   Горные высоты — лендинг. Секции поверх uikit.css
+   ============================================================ */
+
+/* ── HEADER (лого по центру, меню + телефон по бокам, всегда закреплён) ── */
+.gv-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--gv-sp-16);
+  padding: var(--gv-sp-24) var(--gv-side);
+  background: transparent;
+  transition: background 0.25s ease;
+}
+.gv-header--scrolled { background: var(--gv-white); box-shadow: 0 1px 0 var(--gv-line); }
+.gv-header .gv-logo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.gv-header-nav { display: flex; align-items: center; gap: var(--gv-sp-24); }
+.gv-header-nav a {
+  font-family: var(--gv-font); font-size: 15px; color: var(--gv-white);
+  text-decoration: none; opacity: 0.85; transition: opacity 0.15s ease, color 0.25s ease;
+}
+.gv-header-nav a:hover { opacity: 1; }
+.gv-header--scrolled .gv-header-nav a { color: var(--gv-ink); }
+.gv-header-contact { display: flex; align-items: center; gap: var(--gv-sp-16); }
+.gv-header-phone {
+  font-family: var(--gv-font); font-weight: 600; font-size: 16px;
+  color: var(--gv-white); text-decoration: none; white-space: nowrap;
+  transition: color 0.25s ease;
+}
+.gv-header--scrolled .gv-header-phone { color: var(--gv-ink); }
+.gv-logo-tint {
+  position: absolute; inset: 0;
+  background-color: #3A4951;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s ease;
+  mask-size: contain; -webkit-mask-size: contain;
+  mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;
+  mask-position: center; -webkit-mask-position: center;
+}
+.gv-header--scrolled .gv-logo-tint { opacity: 1; }
+.gv-header--scrolled .gv-logo { background-image: none !important; }
+
+@media (max-width: 960px) {
+  .gv-header-nav { display: none; }
+}
+@media (max-width: 640px) {
+  .gv-header-phone { display: none; }
+  .gv-logo { width: 160px; height: 40px; }
+}
+
+/* ── HERO ── */
+.gv-hero {
+  position: relative;
+  min-height: 760px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(180deg, #2B3A40 0%, #1B2529 100%);
+}
+.gv-hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+}
+.gv-hero::after {
+  content: '';
+  position: absolute; inset: 0; z-index: 1;
+  pointer-events: none;
+  background: rgba(0,0,0,0.5);
+}
+.gv-hero-content {
+  position: relative; z-index: 2;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+}
+.gv-logo {
+  width: 220px; height: 56px;
+  margin-bottom: var(--gv-sp-24);
+  font-size: 12px; color: rgba(255,255,255,0.7);
+}
+.gv-hero-title {
+  color: var(--gv-white);
+  margin-bottom: var(--gv-sp-24);
+  width: calc(100% + 2 * var(--gv-side));
+  margin-left: calc(-1 * var(--gv-side));
+  margin-right: calc(-1 * var(--gv-side));
+}
+.gv-hero-price {
+  font-family: var(--gv-font); font-weight: 500; font-size: 24px; line-height: 1.3;
+  color: rgba(255,255,255,0.9); margin-bottom: var(--gv-sp-24);
+}
+.gv-hero-actions { margin-top: var(--gv-sp-56); }
+
+@media (max-width: 860px) {
+  .gv-hero { min-height: 560px; }
+  .gv-hero-content { padding-top: var(--gv-sp-56); }
+}
+
+/* ── АКЦИИ И СКИДКИ ── */
+#perks { background: var(--gv-white); }
+.gv-perks-track {
+  display: flex; gap: var(--gv-sp-16);
+  overflow-x: auto; scroll-snap-type: x mandatory;
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  margin-right: calc(-1 * var(--gv-side)); padding-right: 0;
+}
+.gv-perks-track::-webkit-scrollbar { display: none; }
+.gv-perk-card {
+  flex: 0 0 auto; width: 320px; scroll-snap-align: start;
+  background: var(--gv-bg); border-radius: 20px;
+  padding: var(--gv-sp-24);
+  display: flex; flex-direction: column; justify-content: space-between;
+  min-height: 220px;
+}
+.gv-perk-card-title { font-family: var(--gv-font); font-weight: 700; font-size: 20px; line-height: 1.3; color: var(--gv-ink); }
+.gv-perk-card-title sup { font-size: 12px; font-weight: 500; opacity: 0.5; }
+.gv-perk-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: var(--gv-sp-24); }
+.gv-perk-card-value { font-family: var(--gv-font); font-weight: 500; font-size: 28px; color: var(--gv-ink); }
+.gv-perk-card-arrow {
+  width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
+  background: var(--gv-accent); color: var(--gv-white);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+}
+
+@media (max-width: 860px) {
+  .gv-perk-card { width: 260px; min-height: 180px; }
+}
+
+/* ── СЕКЦИЯ (обычный контентный блок, внешний отступ между секциями) ── */
+.gv-section { padding-top: var(--gv-sp-outer); padding-bottom: var(--gv-sp-outer); }
+
+/* ── БАННЕР ── */
+.gv-banner-section { padding-top: 0; background: var(--gv-bg); }
+.gv-banner-img { width: 100%; aspect-ratio: 16 / 9; border-radius: 24px; }
+@media (max-width: 860px) {
+  .gv-banner-img { aspect-ratio: 4 / 3; }
+}
+.gv-section-title { margin-bottom: var(--gv-sp-56); }
+.gv-section-desc { max-width: 60ch; margin-bottom: var(--gv-sp-32); opacity: 0.75; }
+
+/* ── ПОДБОР ИПОТЕКИ ── */
+.gv-mortgage { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gv-sp-32); align-items: stretch; }
+.gv-mortgage-form { display: flex; flex-direction: column; gap: var(--gv-sp-16); }
+
+.gv-mortgage-tabs { gap: var(--gv-sp-8); }
+.gv-chip--dark { background: var(--gv-ink); color: var(--gv-white); }
+.gv-chip--dark.is-active { background: var(--gv-ink); color: var(--gv-white); }
+
+.gv-mortgage-field {
+  background: var(--gv-bg); border-radius: 20px;
+  padding: 16px 16px 0px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.gv-mortgage-field--phone { padding: 16px; }
+.gv-mortgage-field-top { display: flex; flex-direction: column; gap: 4px; }
+
+.gv-mortgage-field .gv-field-label { font-size: 14px; line-height: 16px; }
+.gv-mortgage-value-row { display: flex; align-items: baseline; justify-content: space-between; }
+.gv-mortgage-value { font-family: var(--gv-font); font-weight: 500; font-size: 16px; line-height: 20px; color: var(--gv-ink); }
+.gv-mortgage-percent { font-family: var(--gv-font); font-size: 14px; color: var(--gv-ink); opacity: 0.4; }
+
+.gv-mortgage-range {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 2px; border-radius: 0;
+  background: var(--gv-ink);
+  margin-top: 12px;
+  cursor: pointer;
+}
+.gv-mortgage-range::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--gv-white); border: 2px solid var(--gv-ink);
+}
+.gv-mortgage-range::-moz-range-thumb {
+  width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--gv-ink);
+  background: var(--gv-white);
+}
+
+.gv-mortgage-input {
+  font-family: var(--gv-font); font-weight: 500; font-size: 16px; line-height: 20px;
+  color: var(--gv-ink); background: transparent; border: none; padding: 0; width: 100%;
+}
+.gv-mortgage-input::placeholder { color: var(--gv-ink); opacity: 0.4; }
+.gv-mortgage-input:focus { outline: none; }
+
+.gv-mortgage-agree { display: flex; align-items: flex-start; gap: var(--gv-sp-8); }
+.gv-mortgage-agree input { width: 22px; height: 22px; flex-shrink: 0; margin-top: 1px; accent-color: var(--gv-accent); cursor: pointer; }
+.gv-mortgage-agree a { color: var(--gv-ink); }
+
+.gv-mortgage-submit { width: 100%; }
+
+.gv-mortgage-avatars { display: flex; justify-content: center; gap: var(--gv-sp-8); }
+.gv-mortgage-avatars span { width: 40px; height: 40px; border-radius: 50%; background: rgba(58,73,81,0.15); }
+
+.gv-mortgage-media { border-radius: 24px; min-height: 100%; }
+
+@media (max-width: 860px) {
+  .gv-mortgage { grid-template-columns: 1fr; }
+  .gv-mortgage-media { aspect-ratio: 4 / 3; min-height: unset; }
+  .gv-mortgage-avatars span:nth-child(n+7) { display: none; }
+}
+
+/* ── ПОДБОРЩИК ПЛАНИРОВОК ── */
+.gv-filter { display: flex; flex-direction: column; gap: var(--gv-sp-4); min-width: 140px; flex: 1; margin-bottom: var(--gv-sp-32); }
+.gv-filter-label { font-size: 13px; opacity: 0.6; }
+.gv-filter select, .gv-filter-chip-row { font-family: var(--gv-font); }
+
+.gv-chip-row { display: flex; flex-wrap: wrap; gap: var(--gv-sp-8); }
+.gv-chip {
+  font-family: var(--gv-font); font-size: 14px; font-weight: 500;
+  padding: 8px 16px; border-radius: 100px;
+  background: var(--gv-bg); color: var(--gv-ink);
+  border: none; cursor: pointer; transition: background 0.15s ease, color 0.15s ease;
+}
+.gv-chip.is-active { background: var(--gv-accent); color: var(--gv-white); }
+
+.gv-plans-count { margin-bottom: var(--gv-sp-24); opacity: 0.6; }
+
+.gv-plans-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--gv-sp-16);
+}
+.gv-plan-card {
+  background: var(--gv-bg); border-radius: 20px; overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.gv-plan-card:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(58,73,81,0.14); }
+.gv-plan-card-img { aspect-ratio: 1; }
+.gv-plan-card-body { padding: var(--gv-sp-16); display: flex; flex-direction: column; gap: var(--gv-sp-4); }
+.gv-plan-card-title { font-weight: 700; font-size: 18px; }
+.gv-plan-card-meta { font-size: 14px; opacity: 0.6; }
+.gv-plan-card-price { font-weight: 700; font-size: 18px; color: var(--gv-accent); margin-top: var(--gv-sp-4); }
+.gv-plan-card-actions { display: flex; flex-direction: column; gap: 8px; margin-top: var(--gv-sp-8); }
+.gv-plan-card-actions .gv-btn { width: 100%; }
+
+.gv-plans-empty { padding: var(--gv-sp-56) 0; text-align: center; opacity: 0.5; }
+
+@media (max-width: 1080px) { .gv-plans-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 760px)  { .gv-plans-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px)  { .gv-plans-grid { grid-template-columns: 1fr; } }
+
+/* ── КАТАЛОГ КВАРТИР ── */
+#catalog, #calculator, #plans { background: var(--gv-white); }
+.gv-catalog-grid { display: flex; flex-direction: column; gap: var(--gv-sp-16); }
+.gv-catalog-card {
+  display: grid; grid-template-columns: 42% 1fr;
+  background: var(--gv-white); border-radius: 24px; overflow: hidden;
+  border: 1px solid var(--gv-line);
+}
+.gv-catalog-media { position: relative; background: var(--gv-white); }
+.gv-catalog-badges {
+  position: absolute; top: var(--gv-sp-16); left: var(--gv-sp-16); z-index: 2;
+  display: flex; flex-wrap: wrap; gap: var(--gv-sp-8);
+}
+.gv-catalog-badge {
+  font-family: var(--gv-font); font-size: 13px; font-weight: 500;
+  padding: 8px 16px; border-radius: 100px;
+  background: var(--gv-ink); color: var(--gv-white);
+}
+.gv-catalog-badge--outline { background: var(--gv-white); box-shadow: none; color: var(--gv-ink); }
+.gv-catalog-badge--red { background: #E8462E; color: var(--gv-white); }
+
+.gv-catalog-slider { position: relative; width: 100%; aspect-ratio: 4 / 3; }
+.gv-catalog-slide {
+  position: absolute; inset: 0; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.gv-catalog-slide.is-active { opacity: 1; pointer-events: auto; cursor: zoom-in; }
+.gv-catalog-dots {
+  position: absolute; bottom: var(--gv-sp-16); left: 50%; transform: translateX(-50%); z-index: 2;
+  display: flex; gap: 6px;
+}
+.gv-catalog-dot {
+  width: 8px; height: 8px; border-radius: 50%; border: none; padding: 0;
+  background: rgba(58,73,81,0.25); cursor: pointer;
+}
+.gv-catalog-dot.is-active { background: var(--gv-white); box-shadow: 0 0 0 1px rgba(58,73,81,0.3); }
+
+.gv-catalog-body {
+  background: var(--gv-bg);
+  padding: var(--gv-sp-32);
+  display: flex; flex-direction: column; justify-content: center; gap: var(--gv-sp-24);
+}
+.gv-catalog-features { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gv-sp-16) var(--gv-sp-32); }
+.gv-catalog-col { display: flex; flex-direction: column; gap: var(--gv-sp-16); }
+.gv-catalog-feature { display: flex; align-items: center; gap: var(--gv-sp-16); }
+.gv-catalog-feature-icon {
+  width: 24px; height: 24px; flex-shrink: 0; border-radius: 0;
+  font-size: 8px;
+  background-size: cover; background-position: center;
+}
+.gv-catalog-footer { display: flex; align-items: center; justify-content: space-between; gap: var(--gv-sp-16); flex-wrap: wrap; }
+.gv-catalog-price-main { font-family: var(--gv-font); font-weight: 700; font-size: 24px; line-height: 32px; color: var(--gv-ink); }
+.gv-catalog-price-sub { font-family: var(--gv-font); font-size: 15px; color: #006E92; }
+.gv-catalog-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+@media (max-width: 860px) {
+  .gv-catalog-card { grid-template-columns: 1fr; }
+  .gv-catalog-slider { aspect-ratio: 4 / 3; }
+  .gv-catalog-features { grid-template-columns: 1fr; }
+  .gv-catalog-footer { flex-direction: column; align-items: flex-start; }
+  .gv-catalog-actions { flex-direction: column; width: 100%; }
+  .gv-catalog-actions .gv-btn { width: 100%; }
+}
+
+/* ── РАЙОН ДЛЯ КОМФОРТНОЙ ЖИЗНИ ── */
+.gv-lifestyle-grid { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: var(--gv-sp-24); row-gap: var(--gv-sp-56); }
+.gv-lifestyle-item { display: flex; flex-direction: column; gap: var(--gv-sp-16); }
+.gv-lifestyle-img { aspect-ratio: 4 / 3; border-radius: 20px; }
+.gv-lifestyle-caption { font-family: var(--gv-font); font-weight: 500; font-size: 24px; line-height: 28px; color: var(--gv-ink); }
+
+@media (max-width: 860px) {
+  .gv-lifestyle-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .gv-lifestyle-grid { grid-template-columns: 1fr; }
+}
+
+/* ── ПРЕИМУЩЕСТВА И НОВЫЕ МАРШРУТЫ ── */
+.gv-routes-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--gv-sp-56); }
+.gv-routes-nav { display: flex; gap: var(--gv-sp-8); }
+.gv-routes-arrow {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--gv-bg); border: none; cursor: pointer;
+  font-family: var(--gv-font); font-size: 20px; color: var(--gv-ink);
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.15s ease;
+}
+#routes .gv-routes-arrow { background: var(--gv-white); }
+.gv-routes-arrow:hover { opacity: 0.7; }
+
+.gv-routes-track {
+  display: flex; gap: var(--gv-sp-16);
+  overflow-x: auto; scroll-snap-type: x mandatory;
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  margin-right: calc(-1 * var(--gv-side));
+  padding-right: 0;
+}
+.gv-routes-track::-webkit-scrollbar { display: none; }
+.gv-routes-cta { display: flex; width: fit-content; margin: var(--gv-sp-32) auto 0; }
+
+.gv-route-card {
+  flex: 0 0 auto; width: min(760px, 85vw); scroll-snap-align: start;
+  display: grid; grid-template-columns: 1fr 1fr;
+  background: var(--gv-white); border-radius: 24px; overflow: hidden;
+  min-height: 420px;
+}
+.gv-route-body {
+  padding: var(--gv-sp-32);
+  display: flex; flex-direction: column; justify-content: center; gap: var(--gv-sp-16);
+}
+.gv-route-img { height: 100%; }
+
+@media (max-width: 860px) {
+  .gv-route-card { grid-template-columns: 1fr; min-height: unset; width: 88vw; }
+  .gv-route-img { aspect-ratio: 4 / 3; }
+  .gv-routes-head { margin-bottom: var(--gv-sp-16); }
+}
+
+/* ── КОНТАКТЫ (карта во всю ширину, поверх — карточка) ── */
+.gv-contacts-section { padding-top: 0; padding-bottom: 0; }
+.gv-contacts-map { position: relative; width: 100%; height: 560px; overflow: hidden; background: var(--gv-bg); }
+.gv-contacts-map iframe { width: 100%; height: 100%; display: block; }
+.gv-contacts-card {
+  position: absolute; top: var(--gv-sp-24); left: var(--gv-side); z-index: 2;
+  background: var(--gv-white); border-radius: 20px;
+  padding: var(--gv-sp-32);
+  max-width: 380px;
+  display: flex; flex-direction: column; gap: var(--gv-sp-24);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+}
+.gv-contacts-title { margin-bottom: 0; }
+.gv-contacts-list { display: flex; flex-direction: column; gap: var(--gv-sp-16); list-style: none; }
+.gv-contacts-list li { display: flex; align-items: flex-start; gap: var(--gv-sp-8); font-family: var(--gv-font); font-size: 17px; line-height: 1.4; color: var(--gv-ink); }
+.gv-contacts-list a { color: var(--gv-ink); text-decoration: none; }
+.gv-contacts-arrow { flex-shrink: 0; opacity: 0.5; }
+.gv-contacts-cta {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--gv-accent); color: var(--gv-white);
+  border-radius: 100px; padding: 16px 24px;
+  font-family: var(--gv-font); font-weight: 500; font-size: 16px;
+  text-decoration: none; text-align: center;
+  transition: opacity 0.15s ease;
+}
+.gv-contacts-cta:hover { opacity: 0.85; }
+
+@media (max-width: 860px) {
+  .gv-contacts-map { height: 460px; }
+  .gv-contacts-card { left: var(--gv-side); right: var(--gv-side); max-width: none; }
+}
+
+/* ── О ЗАСТРОЙЩИКЕ ── */
+#about { background: var(--gv-white); }
+.gv-about-title { margin-bottom: var(--gv-sp-16); }
+.gv-about-desc { max-width: 700px; margin-bottom: var(--gv-sp-56); opacity: 0.75; }
+.gv-about-media { position: relative; }
+.gv-about-img { width: 100%; aspect-ratio: 16 / 9; border-radius: 24px; }
+.gv-about-stats {
+  position: absolute; inset: var(--gv-sp-24);
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: min-content;
+  gap: var(--gv-sp-16);
+  align-content: start;
+}
+.gv-stat-card {
+  background: rgba(239, 234, 230, 0.9);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  border-radius: 16px;
+  padding: var(--gv-sp-24);
+  display: flex; flex-direction: column; justify-content: space-between;
+  gap: var(--gv-sp-32);
+  min-height: 150px;
+}
+.gv-stat-num { font-family: var(--gv-font); font-size: 14px; color: var(--gv-ink); opacity: 0.5; align-self: flex-end; }
+.gv-stat-text { font-family: var(--gv-font); font-size: 15px; line-height: 1.35; color: var(--gv-ink); }
+.gv-stat-text strong { font-size: 20px; font-weight: 700; }
+
+@media (max-width: 860px) {
+  .gv-about-stats { position: static; inset: auto; grid-template-columns: 1fr 1fr; margin-top: var(--gv-sp-16); }
+  .gv-stat-card { min-height: 120px; }
+}
+@media (max-width: 560px) {
+  .gv-about-stats { grid-template-columns: 1fr; }
+}
+
+/* ── ЛЕГАЛ ── */
+.gv-legal { padding-top: var(--gv-sp-32); padding-bottom: var(--gv-sp-32); border-top: 1px solid var(--gv-line); }
+.gv-legal-list { display: flex; flex-direction: column; gap: var(--gv-sp-16); padding-left: 18px; }
+.gv-legal-list li { font-family: var(--gv-font); font-size: 12px; line-height: 1.5; color: var(--gv-ink); opacity: 0.55; }
+
+/* ── ЛАЙТБОКС (галерея) ── */
+.gv-lightbox {
+  position: fixed; inset: 0; z-index: 9998;
+  background: rgba(0,0,0,0.85);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.gv-lightbox.is-open { opacity: 1; pointer-events: auto; }
+.gv-lightbox-img { max-width: 90vw; max-height: 85vh; border-radius: 12px; object-fit: contain; }
+.gv-lightbox-close {
+  position: absolute; top: 24px; right: 24px;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255,255,255,0.15); color: var(--gv-white);
+  border: none; font-size: 26px; line-height: 1; cursor: pointer;
+}
+.gv-lightbox-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 48px; height: 48px; border-radius: 50%;
+  background: rgba(255,255,255,0.15); color: var(--gv-white);
+  border: none; display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.gv-lightbox-prev { left: 24px; }
+.gv-lightbox-next { right: 24px; }
+@media (max-width: 640px) {
+  .gv-lightbox-close { top: 12px; right: 12px; }
+  .gv-lightbox-prev { left: 8px; }
+  .gv-lightbox-next { right: 8px; }
+}
+
+/* якорные ссылки в шапке не должны прятать заголовок секции под фиксированным хедером */
+section[id], footer[id] { scroll-margin-top: 100px; }
+
+/* ── FOOTER ── */
+.gv-footer {
+  padding: var(--gv-sp-32) var(--gv-side);
+  border-top: 1px solid var(--gv-line);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--gv-sp-16);
+}
+.gv-footer-copy { font-size: 14px; opacity: 0.5; }
