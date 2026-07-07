@@ -116,7 +116,7 @@
   margin-right: calc(-1 * var(--gv-side));
 }
 .gv-hero-price {
-  font-family: var(--gv-font); font-weight: 500; font-size: 24px; line-height: 1.3;
+  font-family: var(--gv-font); font-size: 24px; line-height: 1.3;
   color: rgba(255,255,255,0.9); margin-bottom: var(--gv-sp-24);
 }
 .gv-hero-actions { margin-top: var(--gv-sp-56); }
@@ -317,6 +317,17 @@
   position: absolute; bottom: var(--gv-sp-16); left: 50%; transform: translateX(-50%); z-index: 2;
   display: flex; gap: 6px;
 }
+.gv-catalog-arrows { display: contents; }
+.gv-catalog-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,0.85); color: var(--gv-ink);
+  border: none; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.15s ease;
+}
+.gv-catalog-arrow:hover { background: var(--gv-white); }
+.gv-catalog-arrow--prev { left: var(--gv-sp-16); }
+.gv-catalog-arrow--next { right: var(--gv-sp-16); }
 .gv-catalog-dot {
   width: 8px; height: 8px; border-radius: 50%; border: none; padding: 0;
   background: rgba(58,73,81,0.25); cursor: pointer;
