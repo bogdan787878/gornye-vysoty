@@ -407,6 +407,7 @@
 .gv-route-body {
   padding: var(--gv-sp-32);
   display: flex; flex-direction: column; justify-content: center; gap: var(--gv-sp-16);
+  min-width: 0;
 }
 .gv-route-img { height: 100%; }
 
