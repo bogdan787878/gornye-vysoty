@@ -20,13 +20,28 @@
 }
 .gv-header-nav a:hover { opacity: 1; }
 .gv-header--scrolled .gv-header-nav a { color: var(--gv-ink); }
-.gv-header-contact { display: flex; align-items: center; gap: var(--gv-sp-16); }
+.gv-header-contact { display: flex; align-items: center; gap: var(--gv-sp-16); margin-left: auto; }
 .gv-header-phone {
   font-family: var(--gv-font); font-weight: 600; font-size: 16px;
   color: var(--gv-white); text-decoration: none; white-space: nowrap;
   transition: color 0.25s ease;
 }
 .gv-header--scrolled .gv-header-phone { color: var(--gv-ink); }
+
+.gv-header-burger {
+  display: none; width: 28px; height: 20px; flex-shrink: 0;
+  flex-direction: column; justify-content: space-between;
+  background: none; border: none; padding: 0; cursor: pointer;
+}
+.gv-header-burger span {
+  display: block; width: 100%; height: 2px; border-radius: 2px;
+  background: var(--gv-white); transition: background 0.25s ease, transform 0.2s ease, opacity 0.2s ease;
+}
+.gv-header--scrolled .gv-header-burger span { background: var(--gv-ink); }
+.gv-header-burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+.gv-header-burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.gv-header-burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
 .gv-logo-tint {
   position: absolute; inset: 0;
   background-color: #3A4951;
@@ -40,11 +55,27 @@
 .gv-header--scrolled .gv-logo { background-image: none !important; }
 
 @media (max-width: 960px) {
-  .gv-header-nav { display: none; }
+  .gv-header-nav {
+    position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; align-items: flex-start; gap: var(--gv-sp-16);
+    background: var(--gv-white);
+    padding: var(--gv-sp-24) var(--gv-side);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    opacity: 0; pointer-events: none; transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .gv-header-nav.is-open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .gv-header-nav a { color: var(--gv-ink); opacity: 1; font-size: 16px; }
+  .gv-header-burger { display: flex; }
 }
 @media (max-width: 640px) {
+  .gv-header .gv-logo { display: none; }
+  .gv-header-contact { gap: var(--gv-sp-8); }
+  .gv-header-phone { font-size: 13px; }
+  .gv-header-contact .gv-btn--s { padding: 10px 14px; font-size: 13px; }
+}
+@media (max-width: 360px) {
   .gv-header-phone { display: none; }
-  .gv-logo { width: 160px; height: 40px; }
 }
 
 /* ── HERO ── */
@@ -72,6 +103,7 @@
   text-align: center;
 }
 .gv-logo {
+  position: relative;
   width: 220px; height: 56px;
   margin-bottom: var(--gv-sp-24);
   font-size: 12px; color: rgba(255,255,255,0.7);
@@ -92,6 +124,7 @@
 @media (max-width: 860px) {
   .gv-hero { min-height: 560px; }
   .gv-hero-content { padding-top: var(--gv-sp-56); }
+  .gv-hero-title-break { display: none; }
 }
 
 /* ── АКЦИИ И СКИДКИ ── */
@@ -369,6 +402,7 @@
   .gv-route-card { grid-template-columns: 1fr; min-height: unset; width: 88vw; }
   .gv-route-img { aspect-ratio: 4 / 3; }
   .gv-routes-head { margin-bottom: var(--gv-sp-16); }
+  .gv-routes-nav { display: none; }
 }
 
 /* ── КОНТАКТЫ (карта во всю ширину, поверх — карточка) ── */
