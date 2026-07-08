@@ -425,6 +425,7 @@
   .gv-route-card { display: flex; flex-direction: column; min-height: unset; width: 78%; border-radius: 18px; }
   .gv-route-img { aspect-ratio: 4 / 3; height: auto; width: 100%; flex-shrink: 0; }
   .gv-route-body { padding: var(--gv-sp-24); gap: var(--gv-sp-8); width: 100%; }
+  .gv-route-body h3 { min-height: 60px; }
   .gv-routes-head { margin-bottom: var(--gv-sp-56); }
   .gv-routes-nav { display: none; }
 }
