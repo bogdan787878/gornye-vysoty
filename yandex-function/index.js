@@ -16,8 +16,10 @@
  *     --environment CRM_HOUSING_ID=11926 \
  *     --environment ALLOWED_ORIGIN=https://gornye-vysoty.ru
  *
- * CRM_SOURCE_ID больше не используется — источник должен определяться Bitrix
- * самостоятельно по UTM_SOURCE/UTM_MEDIUM, как это происходит для звонков Mango.
+ * source_id не отправляется: поле "Источник" в CRM клиента — строгий enum,
+ * текст в него не принимается (падает на "Не выбрано"), а без параметра
+ * остаётся на серверном дефолте их hook.php ("Яндекс Директ Телеграм").
+ * Нужен от клиента справочник "канал → корректный ID" для этого поля.
  *
  * После создания версии Yandex Cloud даёт публичный HTTP-эндпоинт вида:
  *   https://functions.yandexcloud.net/<function-id>
@@ -27,8 +29,7 @@
  * никогда не должен попадать в код фронтенда.
  */
 
-// Справочник клиента: utm_source → человекочитаемое название канала.
-// Числовые ID источников (SOURCE_ID) для Bitrix у нас пока нет — ждём от клиента.
+// Справочник клиента: utm_source → человекочитаемое название рекламного канала.
 const SOURCE_LABELS = {
   vk_ads: 'ВК таргет',
   yandex_telegram: 'Телеграм через яндекс',
@@ -89,17 +90,18 @@ exports.handler = async function (event) {
   // UTM-параметры разбираются на отдельные поля, чтобы CRM клиента (Bitrix)
   // получала их структурированно, а не сырой query-строкой.
   const utmParams = new URLSearchParams(data.utm || '');
-  const utmSource = utmParams.get('utm_source') || '';
-  const channelLabel = SOURCE_LABELS[utmSource] || '';
+  const channelLabel = SOURCE_LABELS[utmParams.get('utm_source') || ''] || '';
 
-  // Комментарий — только контекст заявки (ипотека / модалка), без UTM/страницы:
-  // те данные уходят отдельными полями ниже.
+  // Комментарий — контекст заявки (ипотека / модалка) плюс определённый по
+  // utm_source рекламный канал (текстом — поле "Источник" в CRM клиента
+  // строгий enum и не принимает текст, поэтому туда его не шлём).
   const comments = [
     data.program ? 'Программа: ' + data.program : '',
     data.price ? 'Стоимость квартиры: ' + data.price + ' ₽' : '',
     data.downPayment ? 'Первый взнос: ' + data.downPayment + ' ₽' : '',
     data.term ? 'Срок кредита: ' + data.term + ' лет' : '',
     data.source ? 'Источник заявки на странице: ' + data.source : '',
+    channelLabel ? 'Рекламный канал (по UTM): ' + channelLabel : '',
   ].filter(Boolean).join('\n');
 
   const params = new URLSearchParams();
@@ -109,8 +111,10 @@ exports.handler = async function (event) {
   params.append('fields[PHONE][0][VALUE_TYPE]', 'WORK');
   params.append('fields[COMMENTS]', comments);
   if (data.page) params.append('fields[SOURCE_DESCRIPTION]', data.page);
-  // Поле "Источник" — текстовое название канала по регламенту клиента (не числовой ID).
-  if (channelLabel) params.append('source_id', channelLabel);
+  // source_id намеренно не отправляется: их hook.php принимает только валидный
+  // enum-ID (не текст) — при неверном значении сбрасывает поле в "Не выбрано".
+  // Без источника поле остаётся на их серверном дефолте. Ждём от клиента
+  // точный справочник "канал → корректный ID" для их sinobi/hook.php.
   ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (key) {
     var value = utmParams.get(key);
     if (value) params.append('fields[' + key.toUpperCase() + ']', value);
