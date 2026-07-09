@@ -14,8 +14,10 @@
  *     --environment CRM_HOOK_URL=https://bx.sskuban.ru/appssk/sinobi/hook.php \
  *     --environment CRM_AUTH_TOKEN=ТОКЕН_ОТ_КЛИЕНТА \
  *     --environment CRM_HOUSING_ID=11926 \
- *     --environment CRM_SOURCE_ID=35 \
  *     --environment ALLOWED_ORIGIN=https://gornye-vysoty.ru
+ *
+ * CRM_SOURCE_ID больше не используется — источник должен определяться Bitrix
+ * самостоятельно по UTM_SOURCE/UTM_MEDIUM, как это происходит для звонков Mango.
  *
  * После создания версии Yandex Cloud даёт публичный HTTP-эндпоинт вида:
  *   https://functions.yandexcloud.net/<function-id>
@@ -56,7 +58,9 @@ exports.handler = async function (event) {
   const hookUrl = process.env.CRM_HOOK_URL;
   const authToken = process.env.CRM_AUTH_TOKEN;
   const housingId = process.env.CRM_HOUSING_ID;
-  const sourceId = process.env.CRM_SOURCE_ID;
+  // CRM_SOURCE_ID нарочно не используется: значение 35 из демо-примера клиента
+  // жёстко подставляло "Яндекс Директ Телеграм" на каждый лид независимо от
+  // реального UTM. Ждём от клиента правильную спецификацию их sinobi/hook.php.
   if (!hookUrl || !authToken) {
     return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ ok: false, error: 'crm hook not configured' }) };
   }
@@ -86,7 +90,6 @@ exports.handler = async function (event) {
     if (value) params.append('fields[' + key.toUpperCase() + ']', value);
   });
   if (housingId) params.append('housing_id', housingId);
-  if (sourceId) params.append('source_id', sourceId);
 
   try {
     const res = await fetch(hookUrl, {
