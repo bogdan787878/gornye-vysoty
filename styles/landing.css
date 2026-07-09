@@ -647,7 +647,7 @@ section[id], footer[id] { scroll-margin-top: 100px; }
 .gv-exit-modal-subtitle { opacity: 0.7; margin-top: calc(-1 * var(--gv-sp-8)); }
 .gv-exit-modal-offer { line-height: 1.5; }
 .gv-exit-modal-offer strong { font-weight: 700; }
-.gv-exit-modal-body .gv-mortgage-field { width: 100%; }
+.gv-exit-modal-body .gv-mortgage-field { width: 100%; text-align: left; }
 .gv-exit-modal-body .gv-mortgage-agree { text-align: left; }
 .gv-exit-modal-body .gv-btn { width: 100%; }
 .gv-exit-modal-close {
