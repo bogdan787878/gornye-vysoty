@@ -67,8 +67,12 @@ exports.handler = async function (event) {
     data.downPayment ? 'Первый взнос: ' + data.downPayment + ' ₽' : '',
     data.term ? 'Срок кредита: ' + data.term + ' лет' : '',
     data.source ? 'Источник заявки на странице: ' + data.source : '',
-    data.page ? 'Страница: ' + data.page : '',
   ].filter(Boolean).join('\n');
+
+  // UTM-параметры разбираются на отдельные поля, чтобы CRM клиента (Bitrix)
+  // сама резолвила человекочитаемый источник (например «Яндекс Директ»)
+  // вместо сырой query-строки в комментарии.
+  const utmParams = new URLSearchParams(data.utm || '');
 
   const params = new URLSearchParams();
   params.append('fields[TITLE]', 'Заявка с сайта Горные высоты' + (data.program ? ' (' + data.program + ')' : ''));
@@ -76,6 +80,11 @@ exports.handler = async function (event) {
   params.append('fields[PHONE][0][VALUE]', phone);
   params.append('fields[PHONE][0][VALUE_TYPE]', 'WORK');
   params.append('fields[COMMENTS]', comments);
+  if (data.page) params.append('fields[SOURCE_DESCRIPTION]', data.page);
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (key) {
+    var value = utmParams.get(key);
+    if (value) params.append('fields[' + key.toUpperCase() + ']', value);
+  });
   if (housingId) params.append('housing_id', housingId);
   if (sourceId) params.append('source_id', sourceId);
 
