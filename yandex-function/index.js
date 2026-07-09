@@ -82,9 +82,6 @@ exports.handler = async function (event) {
   const hookUrl = process.env.CRM_HOOK_URL;
   const authToken = process.env.CRM_AUTH_TOKEN;
   const housingId = process.env.CRM_HOUSING_ID;
-  // CRM_SOURCE_ID нарочно не используется: значение 35 из демо-примера клиента
-  // жёстко подставляло "Яндекс Директ Телеграм" на каждый лид независимо от
-  // реального UTM. Ждём от клиента правильную спецификацию их sinobi/hook.php.
   if (!hookUrl || !authToken) {
     return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ ok: false, error: 'crm hook not configured' }) };
   }
@@ -95,13 +92,14 @@ exports.handler = async function (event) {
   const utmSource = utmParams.get('utm_source') || '';
   const channelLabel = SOURCE_LABELS[utmSource] || '';
 
+  // Комментарий — только контекст заявки (ипотека / модалка), без UTM/страницы:
+  // те данные уходят отдельными полями ниже.
   const comments = [
     data.program ? 'Программа: ' + data.program : '',
     data.price ? 'Стоимость квартиры: ' + data.price + ' ₽' : '',
     data.downPayment ? 'Первый взнос: ' + data.downPayment + ' ₽' : '',
     data.term ? 'Срок кредита: ' + data.term + ' лет' : '',
     data.source ? 'Источник заявки на странице: ' + data.source : '',
-    channelLabel ? 'Рекламный канал (по UTM): ' + channelLabel : '',
   ].filter(Boolean).join('\n');
 
   const params = new URLSearchParams();
@@ -111,6 +109,8 @@ exports.handler = async function (event) {
   params.append('fields[PHONE][0][VALUE_TYPE]', 'WORK');
   params.append('fields[COMMENTS]', comments);
   if (data.page) params.append('fields[SOURCE_DESCRIPTION]', data.page);
+  // Поле "Источник" — текстовое название канала по регламенту клиента (не числовой ID).
+  if (channelLabel) params.append('source_id', channelLabel);
   ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (key) {
     var value = utmParams.get(key);
     if (value) params.append('fields[' + key.toUpperCase() + ']', value);
