@@ -42,7 +42,10 @@
   }
 
   document.querySelectorAll('[data-policy-open]').forEach(function (btn) {
-    btn.addEventListener('click', function () { openPolicy(btn.dataset.policyOpen); });
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      openPolicy(btn.dataset.policyOpen);
+    });
   });
   if (modalClose) modalClose.addEventListener('click', closePolicy);
   if (modal) modal.addEventListener('click', function (e) { if (e.target === modal) closePolicy(); });
