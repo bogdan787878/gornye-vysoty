@@ -16,10 +16,9 @@
  *     --environment CRM_HOUSING_ID=11926 \
  *     --environment ALLOWED_ORIGIN=https://gornye-vysoty.ru
  *
- * source_id не отправляется: поле "Источник" в CRM клиента — строгий enum,
- * текст в него не принимается (падает на "Не выбрано"), а без параметра
- * остаётся на серверном дефолте их hook.php ("Яндекс Директ Телеграм").
- * Нужен от клиента справочник "канал → корректный ID" для этого поля.
+ * source_id берётся из справочника SOURCE_ID_MAP (получен от клиента,
+ * файл "Источники Б24 ССК.xlsx") — это строгий enum Bitrix, текст туда
+ * передавать нельзя.
  *
  * После создания версии Yandex Cloud даёт публичный HTTP-эндпоинт вида:
  *   https://functions.yandexcloud.net/<function-id>
@@ -29,28 +28,27 @@
  * никогда не должен попадать в код фронтенда.
  */
 
-// Справочник клиента: utm_source → человекочитаемое название рекламного канала.
-const SOURCE_LABELS = {
-  vk_ads: 'ВК таргет',
-  yandex_telegram: 'Телеграм через яндекс',
-  yandex: 'Яндекс Директ Поиск',
-  yandex_mkb: 'Яндекс Директ МКБ',
-  yandex_all: 'Яндекс Директ ЕПК (поиск+сети)',
-  yandex_product: 'Яндекс Директ Товарная',
-  yandex_rsya: 'Яндекс Директ РСЯ',
-  yandex_master: 'Яндекс Директ Мастер',
-  avito: 'Авито',
-  tg_ads: 'Telegram Ads',
-  yandex_mediynaya: 'Яндекс медийная',
-  max_ads: 'МАХ',
-  't-bank': 'Т-банк',
-  telegram_in: 'Телега Ин',
-  urban_ads: 'Яндекс Urban Ads',
-  tg_posev: 'Посевы ТГ',
-  ozon: 'Ozon (медийная РК)',
-  yandex_max: 'Яндекс Директ MAX',
-  wbmedia: 'WB (медийная РК)',
+// Справочник клиента (файл "Источники Б24 ССК.xlsx"): utm_source → ID источника в Bitrix.
+const SOURCE_ID_MAP = {
+  yandex_product: 'UC_A1NB8J',   // Яндекс Директ Товарная
+  yandex_all: 'UC_YXHVSL',       // Яндекс Директ ЕПК (поиск+сети)
+  yandex_mkb: 'UC_J7ZOVL',       // Яндекс Директ МКБ
+  yandex_master: 'UC_PBSE4Z',    // Яндекс Директ Мастер
+  yandex_rsya: 62,               // Яндекс Директ РСЯ
+  yandex_telegram: 35,           // Яндекс Директ Телеграм
+  yandex: 61,                    // Яндекс Директ Поиск
+  yandex_max: 'UC_B0DHEM',       // Яндекс Директ MAX
+  vk_ads: 'UC_0E283Z',           // ВК таргет
+  avito: 'UC_ZO4J0M',            // Авито
+  telegram_ads: 40,              // Телеграм ads
+  max_ads: 'UC_6XKCXA',          // МАХ ads
+  telegram_in: 'UC_L3MFJ8',      // Telega In
+  urban_ads: 'UC_B84BOR',        // Яндекс Urban Ads
+  yandex_mediynaya: 'UC_SLN0XQ', // Яндекс медийная
+  yandex_rtb: 'UC_JVEQXJ',       // РТБ108
 };
+// Без UTM (прямой заход на сайт, органика) — «Органика (сайт заявка)».
+const SOURCE_ID_ORGANIC = 16;
 
 exports.handler = async function (event) {
   const allowedOrigin = process.env.ALLOWED_ORIGIN || '*';
@@ -90,18 +88,15 @@ exports.handler = async function (event) {
   // UTM-параметры разбираются на отдельные поля, чтобы CRM клиента (Bitrix)
   // получала их структурированно, а не сырой query-строкой.
   const utmParams = new URLSearchParams(data.utm || '');
-  const channelLabel = SOURCE_LABELS[utmParams.get('utm_source') || ''] || '';
+  const utmSource = utmParams.get('utm_source') || '';
+  const sourceId = utmSource ? (SOURCE_ID_MAP[utmSource] || '') : SOURCE_ID_ORGANIC;
 
-  // Комментарий — контекст заявки (ипотека / модалка) плюс определённый по
-  // utm_source рекламный канал (текстом — поле "Источник" в CRM клиента
-  // строгий enum и не принимает текст, поэтому туда его не шлём).
   const comments = [
     data.program ? 'Программа: ' + data.program : '',
     data.price ? 'Стоимость квартиры: ' + data.price + ' ₽' : '',
     data.downPayment ? 'Первый взнос: ' + data.downPayment + ' ₽' : '',
     data.term ? 'Срок кредита: ' + data.term + ' лет' : '',
     data.source ? 'Источник заявки на странице: ' + data.source : '',
-    channelLabel ? 'Рекламный канал (по UTM): ' + channelLabel : '',
   ].filter(Boolean).join('\n');
 
   const params = new URLSearchParams();
@@ -111,10 +106,7 @@ exports.handler = async function (event) {
   params.append('fields[PHONE][0][VALUE_TYPE]', 'WORK');
   params.append('fields[COMMENTS]', comments);
   if (data.page) params.append('fields[SOURCE_DESCRIPTION]', data.page);
-  // source_id намеренно не отправляется: их hook.php принимает только валидный
-  // enum-ID (не текст) — при неверном значении сбрасывает поле в "Не выбрано".
-  // Без источника поле остаётся на их серверном дефолте. Ждём от клиента
-  // точный справочник "канал → корректный ID" для их sinobi/hook.php.
+  if (sourceId) params.append('source_id', sourceId);
   ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (key) {
     var value = utmParams.get(key);
     if (value) params.append('fields[' + key.toUpperCase() + ']', value);
