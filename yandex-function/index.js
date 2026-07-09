@@ -68,7 +68,6 @@ exports.handler = async function (event) {
     data.term ? 'Срок кредита: ' + data.term + ' лет' : '',
     data.source ? 'Источник заявки на странице: ' + data.source : '',
     data.page ? 'Страница: ' + data.page : '',
-    data.utm ? 'UTM: ' + data.utm : '',
   ].filter(Boolean).join('\n');
 
   const params = new URLSearchParams();
