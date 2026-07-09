@@ -27,6 +27,30 @@
  * никогда не должен попадать в код фронтенда.
  */
 
+// Справочник клиента: utm_source → человекочитаемое название канала.
+// Числовые ID источников (SOURCE_ID) для Bitrix у нас пока нет — ждём от клиента.
+const SOURCE_LABELS = {
+  vk_ads: 'ВК таргет',
+  yandex_telegram: 'Телеграм через яндекс',
+  yandex: 'Яндекс Директ Поиск',
+  yandex_mkb: 'Яндекс Директ МКБ',
+  yandex_all: 'Яндекс Директ ЕПК (поиск+сети)',
+  yandex_product: 'Яндекс Директ Товарная',
+  yandex_rsya: 'Яндекс Директ РСЯ',
+  yandex_master: 'Яндекс Директ Мастер',
+  avito: 'Авито',
+  tg_ads: 'Telegram Ads',
+  yandex_mediynaya: 'Яндекс медийная',
+  max_ads: 'МАХ',
+  't-bank': 'Т-банк',
+  telegram_in: 'Телега Ин',
+  urban_ads: 'Яндекс Urban Ads',
+  tg_posev: 'Посевы ТГ',
+  ozon: 'Ozon (медийная РК)',
+  yandex_max: 'Яндекс Директ MAX',
+  wbmedia: 'WB (медийная РК)',
+};
+
 exports.handler = async function (event) {
   const allowedOrigin = process.env.ALLOWED_ORIGIN || '*';
   const corsHeaders = {
@@ -65,18 +89,20 @@ exports.handler = async function (event) {
     return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ ok: false, error: 'crm hook not configured' }) };
   }
 
+  // UTM-параметры разбираются на отдельные поля, чтобы CRM клиента (Bitrix)
+  // получала их структурированно, а не сырой query-строкой.
+  const utmParams = new URLSearchParams(data.utm || '');
+  const utmSource = utmParams.get('utm_source') || '';
+  const channelLabel = SOURCE_LABELS[utmSource] || '';
+
   const comments = [
     data.program ? 'Программа: ' + data.program : '',
     data.price ? 'Стоимость квартиры: ' + data.price + ' ₽' : '',
     data.downPayment ? 'Первый взнос: ' + data.downPayment + ' ₽' : '',
     data.term ? 'Срок кредита: ' + data.term + ' лет' : '',
     data.source ? 'Источник заявки на странице: ' + data.source : '',
+    channelLabel ? 'Рекламный канал (по UTM): ' + channelLabel : '',
   ].filter(Boolean).join('\n');
-
-  // UTM-параметры разбираются на отдельные поля, чтобы CRM клиента (Bitrix)
-  // сама резолвила человекочитаемый источник (например «Яндекс Директ»)
-  // вместо сырой query-строки в комментарии.
-  const utmParams = new URLSearchParams(data.utm || '');
 
   const params = new URLSearchParams();
   params.append('fields[TITLE]', 'Заявка с сайта Горные высоты' + (data.program ? ' (' + data.program + ')' : ''));
