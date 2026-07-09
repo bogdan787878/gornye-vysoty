@@ -792,9 +792,32 @@
     </div>
   </div>
 
+  <!-- Exit-intent модалка: спецпредложение при попытке уйти со страницы -->
+  <div class="gv-exit-modal" id="exitModal">
+    <div class="gv-exit-modal-inner">
+      <button type="button" class="gv-exit-modal-close" id="exitModalClose" aria-label="Закрыть">×</button>
+      <div class="gv-exit-modal-media gv-ph" data-slot="exit-popup" data-fit="cover">фото дома</div>
+      <div class="gv-exit-modal-body">
+        <h3 class="gv-title gv-exit-modal-title">Уже собираетесь уйти?</h3>
+        <p class="gv-body-l gv-exit-modal-subtitle">Для вас — специальное предложение</p>
+        <p class="gv-body-l gv-exit-modal-offer">ЖК «Горные высоты»<br>Квартиры комфорт-плюс от <strong>3,7 млн ₽</strong><br>Платёж от <strong>19 992 ₽</strong>/мес.</p>
+        <div class="gv-mortgage-field gv-mortgage-field--phone">
+          <span class="gv-field-label">Телефон</span>
+          <input class="gv-mortgage-input" type="tel" id="exit-phone" placeholder="Введите номер">
+        </div>
+        <label class="gv-mortgage-agree">
+          <input type="checkbox" id="exit-agree">
+          <span class="gv-body-s">Я согласен с <a href="#">условиями обработки персональных данных</a></span>
+        </label>
+        <button type="button" class="gv-btn gv-btn--m gv-exit-modal-submit">Жду звонка</button>
+      </div>
+    </div>
+  </div>
+
   <script src="js/calculator.js"></script>
   <script src="js/lead-form.js"></script>
   <script src="js/lead-modal.js"></script>
+  <script src="js/exit-intent.js"></script>
   <script src="js/header-scroll.js"></script>
   <script src="js/plans.js"></script>
   <script src="js/catalog-slider.js"></script>

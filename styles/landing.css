@@ -622,3 +622,42 @@ section[id], footer[id] { scroll-margin-top: 100px; }
 @media (max-width: 640px) {
   .gv-lead-modal-inner { padding: var(--gv-sp-24); }
 }
+
+/* ── EXIT-INTENT МОДАЛКА ── */
+.gv-exit-modal {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center; padding: var(--gv-sp-24);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.gv-exit-modal.is-open { opacity: 1; pointer-events: auto; }
+.gv-exit-modal-inner {
+  position: relative; background: var(--gv-white); border-radius: 24px; overflow: hidden;
+  max-width: 880px; width: 100%; max-height: 90vh;
+  display: grid; grid-template-columns: 1fr 1fr;
+}
+.gv-exit-modal-media { min-height: 100%; }
+.gv-exit-modal-body {
+  padding: var(--gv-sp-56) var(--gv-sp-32);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--gv-sp-16);
+  text-align: center; overflow-y: auto;
+}
+.gv-exit-modal-title { margin-bottom: 0; }
+.gv-exit-modal-subtitle { opacity: 0.7; margin-top: calc(-1 * var(--gv-sp-8)); }
+.gv-exit-modal-offer { line-height: 1.5; }
+.gv-exit-modal-offer strong { font-weight: 700; }
+.gv-exit-modal-body .gv-mortgage-field { width: 100%; }
+.gv-exit-modal-body .gv-mortgage-agree { text-align: left; }
+.gv-exit-modal-body .gv-btn { width: 100%; }
+.gv-exit-modal-close {
+  position: absolute; top: var(--gv-sp-16); right: var(--gv-sp-16); z-index: 2;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,0.85); color: var(--gv-ink);
+  border: none; font-size: 22px; line-height: 1; cursor: pointer;
+}
+@media (max-width: 760px) {
+  .gv-exit-modal-inner { grid-template-columns: 1fr; max-height: 92vh; overflow-y: auto; }
+  .gv-exit-modal-media { aspect-ratio: 16 / 9; min-height: unset; }
+  .gv-exit-modal-body { padding: var(--gv-sp-24); }
+}
