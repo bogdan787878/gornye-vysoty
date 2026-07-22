@@ -33,18 +33,6 @@
   modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
 
-  if (phoneEl) {
-    phoneEl.addEventListener('input', function () {
-      if (phoneEl.value && phoneEl.value.indexOf('+7') !== 0) {
-        var digits = phoneEl.value.replace(/\D/g, '').replace(/^7/, '');
-        phoneEl.value = '+7' + digits;
-      }
-    });
-    phoneEl.addEventListener('focus', function () {
-      if (!phoneEl.value) phoneEl.value = '+7';
-    });
-  }
-
   function setState(text, isError) {
     submitBtn.textContent = text;
     submitBtn.style.opacity = isError ? '0.7' : '';

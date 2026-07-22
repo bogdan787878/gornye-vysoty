@@ -42,20 +42,6 @@
 })();
 
 (function () {
-  var phone = document.getElementById('calc-phone');
-  if (!phone) return;
-  phone.addEventListener('input', function () {
-    if (phone.value && phone.value.indexOf('+7') !== 0) {
-      var digits = phone.value.replace(/\D/g, '').replace(/^7/, '');
-      phone.value = '+7' + digits;
-    }
-  });
-  phone.addEventListener('focus', function () {
-    if (!phone.value) phone.value = '+7';
-  });
-})();
-
-(function () {
   var tabs = document.getElementById('mortgage-tabs');
   var calcFields = document.getElementById('mortgage-calc-fields');
   var info = document.getElementById('mortgage-info');
