@@ -6,7 +6,147 @@
   <title>Горные высоты — квартиры комфорт-плюс в Майкопе</title>
   <link rel="icon" type="image/svg+xml" href="images/footer-logo.svg">
   <link rel="preload" as="image" href="images/hero.webp" fetchpriority="high">
-  <link rel="stylesheet" href="styles/uikit.css">
+  <!-- uikit.css заинлайнен (не через <link>), чтобы убрать один блокирующий
+       рендер круговой запрос из критического пути — держать 1-в-1 синхронно
+       со styles/uikit.css при правках токенов/типографики. -->
+  <style>
+@font-face {
+  font-family: 'Cygre';
+  src: url('fonts/Cygre-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cygre';
+  src: url('fonts/Cygre-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cygre';
+  src: url('fonts/Cygre-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cygre';
+  src: url('fonts/Cygre-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cygre';
+  src: url('fonts/Cygre-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cygre';
+  src: url('fonts/Cygre-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --gv-ink:    #3A4951;
+  --gv-accent: #748C74;
+  --gv-bg:     #EFEAE6;
+  --gv-white:  #FFFFFF;
+  --gv-line:   rgba(58, 73, 81, 0.14);
+  --gv-ph:     #D9D2CB;
+
+  --gv-sp-outer: 80px;
+  --gv-sp-56: 56px;
+  --gv-sp-32: 32px;
+  --gv-sp-24: 24px;
+  --gv-sp-16: 16px;
+  --gv-sp-8:  8px;
+  --gv-sp-4:  4px;
+  --gv-sp-0:  0px;
+
+  --gv-side: 124px;
+  --gv-font: 'Cygre', sans-serif;
+}
+
+@media (max-width: 860px) {
+  :root {
+    --gv-sp-outer: 40px;
+    --gv-sp-56: 32px;
+    --gv-sp-32: 20px;
+    --gv-sp-24: 16px;
+    --gv-sp-16: 12px;
+    --gv-sp-8:  6px;
+    --gv-sp-4:  4px;
+
+    --gv-side: 20px;
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+body {
+  background: var(--gv-bg);
+  color: var(--gv-ink);
+  font-family: var(--gv-font);
+}
+img, video { display: block; max-width: 100%; }
+
+.gv-wrap { width: 100%; padding: 0 var(--gv-side); }
+
+.gv-h1 { font-family: var(--gv-font); font-weight: 700; font-size: 72px; line-height: 80px; letter-spacing: -0.02em; color: var(--gv-ink); }
+.gv-h2 { font-family: var(--gv-font); font-weight: 500; font-size: 56px; line-height: 64px; letter-spacing: -0.01em; color: var(--gv-ink); }
+.gv-title { font-family: var(--gv-font); font-weight: 700; font-size: 24px; line-height: 32px; color: var(--gv-ink); }
+.gv-body-s { font-family: var(--gv-font); font-weight: 400; font-size: 16px; line-height: 18px; color: var(--gv-ink); }
+.gv-body-l { font-family: var(--gv-font); font-weight: 400; font-size: 16px; line-height: 20px; color: var(--gv-ink); }
+
+@media (max-width: 860px) {
+  .gv-h1 { font-size: 38px; line-height: 44px; }
+  .gv-h2 { font-size: 30px; line-height: 36px; }
+  .gv-title { font-size: 22px; line-height: 30px; }
+  .gv-body-s { font-size: 14px; line-height: 16px; }
+  .gv-body-l { font-size: 14px; line-height: 18px; }
+  .gv-btn--m { font-size: 16px; line-height: 18px; padding: 14px 20px; }
+  .gv-btn--s { font-size: 13px; line-height: 15px; padding: 12px 18px; }
+}
+
+.gv-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--gv-font); font-weight: 500;
+  background: var(--gv-accent); color: var(--gv-white);
+  border: none; border-radius: 100px; cursor: pointer;
+  text-decoration: none; white-space: nowrap;
+  transition: opacity 0.18s ease;
+}
+.gv-btn:hover { opacity: 0.85; }
+.gv-btn--outline { background: transparent; color: var(--gv-ink); box-shadow: inset 0 0 0 1.5px var(--gv-ink); }
+
+.gv-btn--s { font-size: 14px; line-height: 16px; padding: 16px 24px; }
+.gv-btn--m { font-size: 20px; line-height: 22px; padding: 16px 24px; }
+
+.gv-field { display: flex; flex-direction: column; gap: 6px; }
+.gv-field-label { font-family: var(--gv-font); font-weight: 400; font-size: 16px; line-height: 18px; color: var(--gv-ink); opacity: 0.6; }
+.gv-input {
+  font-family: var(--gv-font); font-weight: 500; font-size: 20px; line-height: 22px;
+  color: var(--gv-ink); background: var(--gv-white);
+  border: none; border-radius: 12px; padding: 14px 16px;
+  width: 100%;
+}
+.gv-input:focus { outline: 2px solid var(--gv-accent); outline-offset: 1px; }
+.gv-input[type="range"] { padding: 0; background: transparent; accent-color: var(--gv-accent); }
+
+.gv-ph {
+  background: var(--gv-ph);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(58,73,81,0.4);
+  font-family: var(--gv-font); font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase;
+}
+  </style>
   <link rel="stylesheet" href="styles/landing.css">
   <!-- Yandex.Metrika counter -->
   <script type="text/javascript">
