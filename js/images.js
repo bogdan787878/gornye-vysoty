@@ -7,6 +7,38 @@
     });
   }
 
+  function paint(el, path) {
+    var url = 'url(' + path + ')';
+    el.style.backgroundImage = url;
+    el.style.backgroundSize = el.dataset.fit === 'contain' ? 'contain' : 'cover';
+    el.style.backgroundRepeat = 'no-repeat';
+    el.style.backgroundPosition = 'center';
+    clearPlaceholderText(el);
+    el.classList.remove('gv-ph');
+    // для лого — та же картинка используется как маска на оверлее (перекраска на белом хедере)
+    if (el.dataset.slot === 'logo') {
+      var tint = el.querySelector('.gv-logo-tint');
+      if (tint) {
+        tint.style.maskImage = url;
+        tint.style.webkitMaskImage = url;
+      }
+    }
+  }
+
+  // Не откладываем только герой (LCP-элемент, всегда виден при заходе на
+  // страницу) — остальные 50+ картинок ставим по IntersectionObserver,
+  // чтобы не грузить всё разом на мобильном при заходе.
+  var EAGER_SLOTS = ['hero'];
+  var lazyObserver = 'IntersectionObserver' in window
+    ? new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          lazyObserver.unobserve(entry.target);
+          paint(entry.target, entry.target.dataset.gvPath);
+        });
+      }, { rootMargin: '600px 0px' })
+    : null;
+
   fetch('data/images.json')
     .then(function (r) { return r.ok ? r.json() : {}; })
     .then(function (map) {
@@ -15,20 +47,14 @@
         if (!path) return;
         var els = document.querySelectorAll('[data-slot="' + slot + '"]');
         els.forEach(function (el) {
-          var url = 'url(' + path + '?v=' + Date.now() + ')';
-          el.style.backgroundImage = url;
-          el.style.backgroundSize = el.dataset.fit === 'contain' ? 'contain' : 'cover';
-          el.style.backgroundRepeat = 'no-repeat';
-          el.style.backgroundPosition = 'center';
-          clearPlaceholderText(el);
-          el.classList.remove('gv-ph');
-          // для лого — та же картинка используется как маска на оверлее (перекраска на белом хедере)
-          if (slot === 'logo') {
-            var tint = el.querySelector('.gv-logo-tint');
-            if (tint) {
-              tint.style.maskImage = url;
-              tint.style.webkitMaskImage = url;
-            }
+          // Отмечаем сразу (независимо от того, отложена покраска или нет) —
+          // на этот флаг ниже опирается логика скрытия пустых слайдов/аватарок.
+          el.dataset.gvHasImage = '1';
+          if (EAGER_SLOTS.indexOf(slot) !== -1 || !lazyObserver) {
+            paint(el, path);
+          } else {
+            el.dataset.gvPath = path;
+            lazyObserver.observe(el);
           }
         });
       });
@@ -41,7 +67,7 @@
           if (isEditMode) return;
 
           document.querySelectorAll('.gv-mortgage-avatars [data-slot]').forEach(function (el) {
-            if (!el.style.backgroundImage) el.style.display = 'none';
+            if (!el.dataset.gvHasImage) el.style.display = 'none';
           });
 
           document.querySelectorAll('.gv-catalog-card').forEach(function (card) {
@@ -49,7 +75,7 @@
             var dots = card.querySelectorAll('.gv-catalog-dot');
             var visibleCount = 0;
             slides.forEach(function (slide, i) {
-              if (slide.style.backgroundImage) {
+              if (slide.dataset.gvHasImage) {
                 visibleCount++;
               } else {
                 slide.style.display = 'none';
