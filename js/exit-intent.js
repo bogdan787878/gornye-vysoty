@@ -18,7 +18,10 @@
 
   function openModal() {
     if (alreadyShown()) return;
-    if (document.querySelector('.gv-lead-modal.is-open')) return;
+    // Не показываем поверх уже открытой модалки (заявка, политика и т.п.) —
+    // иначе клик по «Политике конфиденциальности» (курсор проходит рядом
+    // с верхом окна к крестику) заодно триггерит exit-intent.
+    if (document.querySelector('.is-open')) return;
     markShown();
     modal.classList.add('is-open');
     document.body.style.overflow = 'hidden';
